@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { HistoryModule } from './history/history.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
+import { eventModule } from './websocket/event.module';
 
 @Module({
   imports: [
@@ -23,6 +23,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       synchronize: true, // 서비스 구동 시 소스 코드 기반으로 DB 스키마 동기화할지 여부, PROD 에서는 false 로 할 것
     }),
     HistoryModule,
+    eventModule,
   ],
   controllers: [AppController],
   providers: [AppService],
