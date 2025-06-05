@@ -8,10 +8,11 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { historyDto } from '../history/history.dto';
+import { HistoryDto } from '../history/history.dto';
+import { validateSync } from 'class-validator';
+import { plainToInstance } from 'class-transformer';
 import { Inject } from '@nestjs/common';
-import { firstValueFrom } from 'rxjs';
-import { HttpService } from '@nestjs/axios';
+import { HistoryService } from 'src/history/history.service';
 
 @WebSocketGateway({ cors: true })
 // @WebSocketGateway({ namespace: 'room', cors: true }) // 네임스페이스 설정
@@ -21,7 +22,9 @@ import { HttpService } from '@nestjs/axios';
 //   },
 // })
 export class eventGateway implements OnGatewayConnection, OnGatewayDisconnect {
-  constructor(private readonly httpService: HttpService) {}
+
+  @Inject()
+  private readonly historyService: HistoryService;
 
   @WebSocketServer()
   server: Server; // 전체 네임스페이스 서버
@@ -37,29 +40,24 @@ export class eventGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('event') // 이벤트 설정
   async handleMessage(
     // @MessageBody() msg: { sender: string; message: string },
-    @MessageBody() msg: historyDto,     // api에서는 @Body() createUserDto: CreateUserDto (import { Body, Controller, Post } from '@nestjs/common';)
+    @MessageBody() msg: HistoryDto,     // api에서는 @Body() createUserDto: CreateUserDto (import { Body, Controller, Post } from '@nestjs/common';)
     @ConnectedSocket() client: Socket,
   ) {
     const parsedMsg = msgParser(msg);
     // console.log(`[${parsedMsg.sender}]: ${parsedMsg.message}`);
 
+    // --- validation --- //
+    const dto = plainToInstance(HistoryDto, parsedMsg);
 
-    try{
-      await firstValueFrom(
-        this.httpService.post(`http://localhost:${process.env.PORT ?? 3000}/api/history`, msg,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          },
-        ),
-      );
+    const errors = validateSync(dto);
 
-    }catch(e){
-      console.log("Websocket - Invalid type: ", e.response?.data);
-      // console.log("Websocket - Invalid type: ", e.message);
+    if (errors.length > 0) {
+      console.log("Websocket - Validation failed: " + JSON.stringify(errors));
       return;
     }
+
+    // 유효하면 service 호출
+    await this.historyService.createHistory(dto);
 
     // client.broadcast.emit('message', data); // 다른 클라이언트에게 전파
     this.server.emit('event', parsedMsg); // 다른 클라이언트에게 전파

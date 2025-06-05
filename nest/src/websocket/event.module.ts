@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { eventGateway } from './event.gateway';
-import { HistoryController } from 'src/history/history.controller';
-import { HttpModule } from '@nestjs/axios';
+import { HistoryService } from 'src/history/history.service';
+import { HistoryModule } from 'src/history/history.module';
 
 @Module({
-    imports: [HttpModule],
-    providers: [eventGateway], // 의존성 정의
+    imports: [HistoryModule],
+    providers: [eventGateway], // historyService? DI issue
 })
 export class eventModule {}

@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Inject, Param, Res } from '@nestjs/common'
 import { HistoryService } from './history.service';
 import { Response } from 'express'; 
 import * as path from 'path';  // Node.js 기본 모듈 import 방식
-import { historyDto } from 'src/history/history.dto';
+import { HistoryDto } from 'src/history/history.dto';
 
 @Controller('api/history')
 export class HistoryController {
@@ -23,8 +23,8 @@ export class HistoryController {
         return res.sendFile(imagePath);
     }
 
-    @Post()
-    createHistory(@Body() dto: historyDto){
-        return this.historyService.createHistory(dto);
-    }
+    // @Post()
+    // createHistory(@Body() dto: historyDto){
+    //     return this.historyService.createHistory(dto);
+    // }
 }

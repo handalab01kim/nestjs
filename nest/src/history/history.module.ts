@@ -5,8 +5,9 @@ import { HistoryController } from './history.controller';
 import { HistoryService } from './history.service';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([History])],
+  imports: [TypeOrmModule.forFeature([History])],
   controllers: [HistoryController],
-  providers: [HistoryService]
+  providers: [HistoryService],
+  exports: [HistoryService], // Websocket 에서 활용 !!!!!
 })
 export class HistoryModule {}
