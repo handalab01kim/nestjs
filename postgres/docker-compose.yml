@@ -1,0 +1,17 @@
+services:
+  postgres:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: binpicking_postgres
+    image: binpicking_postgres
+    ports:
+    - "5435:5432"
+    restart: unless-stopped
+    environment:
+    - TZ=Asia/Seoul
+    - POSTGRES_DB=binpicking
+    - POSTGRES_USER=handalab
+    - POSTGRES_PASSWORD=handalab
+    volumes:
+    - ./init.sql:/docker-entrypoint-initdb.d/init.sql
