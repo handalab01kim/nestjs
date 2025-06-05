@@ -5,8 +5,8 @@ export class History {
   @PrimaryGeneratedColumn()
   idx: number; // SERIAL PRIMARY KEY
 
-  @Column({ length: 512, default: '' })
-  url: string;
+  @Column({ length: 256, default: '' })
+  file: string;
 
   @CreateDateColumn({ type: 'timestamp' })
   time: Date; // DEFAULT now()
