@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { TransformDateInterceptor } from './interceptor/transform-date/transform-date.interceptor';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -12,7 +13,8 @@ async function bootstrap() {
   // app.get('*', (req, res) => {
   //   res.sendFile(join(__dirname, '..', 'public', 'build', 'index.html'));
   // });
-
+  
+  app.useGlobalPipes(new ValidationPipe()); // api 유효성 검증
   app.useGlobalInterceptors(new TransformDateInterceptor());
   await app.listen(process.env.PORT ?? 3000);
 }

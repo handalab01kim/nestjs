@@ -8,11 +8,16 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { eventDto } from './event.dto';
+import { historyDto } from '../history/history.dto';
 import { UsePipes, ValidationPipe } from '@nestjs/common'; // websocket body 유효성 검사
 
 @WebSocketGateway({ cors: true })
 // @WebSocketGateway({ namespace: 'room', cors: true }) // 네임스페이스 설정
+// @WebSocketGateway({
+//   cors: {
+//     origin: '*', // 실제 배포 시에는 보안을 위해 특정 도메인으로 제한
+//   },
+// })
 export class eventGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @WebSocketServer()
@@ -35,7 +40,7 @@ export class eventGateway implements OnGatewayConnection, OnGatewayDisconnect {
   // -> 안됨 !!!
   handleMessage(
     // @MessageBody() msg: { sender: string; message: string },
-    @MessageBody() msg: eventDto,     // api에서는 @Body() createUserDto: CreateUserDto (import { Body, Controller, Post } from '@nestjs/common';)
+    @MessageBody() msg: historyDto,     // api에서는 @Body() createUserDto: CreateUserDto (import { Body, Controller, Post } from '@nestjs/common';)
     @ConnectedSocket() client: Socket,
   ) {
     const parsedMsg = msgParser(msg);

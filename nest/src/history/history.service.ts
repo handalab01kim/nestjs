@@ -2,9 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { History } from './history.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { historyDto } from 'src/history/history.dto';
 
 @Injectable()
 export class HistoryService {
+
     constructor(
         @InjectRepository(History)
         private historyRepository: Repository<History>,
@@ -27,4 +29,9 @@ export class HistoryService {
     }
 
   */
+
+    async createHistory(dto: historyDto) {
+        await this.historyRepository.save(dto);
+    }
+
 }

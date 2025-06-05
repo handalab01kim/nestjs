@@ -1,6 +1,6 @@
 import { IsInt, Min, Max, IsOptional, IsString, Length } from 'class-validator';
 
-export class eventDto {
+export class historyDto {
   @IsString()
   @Length(1, 256)
   file: string;
