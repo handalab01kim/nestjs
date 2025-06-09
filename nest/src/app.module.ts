@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { HistoryModule } from './history/history.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { eventModule } from './websocket/event.module';
+import { RtspService } from './rtsp/rtsp.service';
 
 @Module({
   imports: [
@@ -26,6 +27,6 @@ import { eventModule } from './websocket/event.module';
     eventModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, RtspService],
 })
 export class AppModule {}

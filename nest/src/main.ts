@@ -2,10 +2,10 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { TransformDateInterceptor } from './interceptor/transform-date/transform-date.interceptor';
 import { ValidationPipe } from '@nestjs/common';
-
+import { RtspService } from './rtsp/rtsp.service';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
+  
   // // React build 정적 파일 서빙
   // app.use(express.static(join(__dirname, '..', 'public', 'build'))); 
 
@@ -13,6 +13,8 @@ async function bootstrap() {
   // app.get('*', (req, res) => {
   //   res.sendFile(join(__dirname, '..', 'public', 'build', 'index.html'));
   // });
+
+  app.get(RtspService);
   
   app.useGlobalPipes(new ValidationPipe()); // api 유효성 검증
   app.useGlobalInterceptors(new TransformDateInterceptor());
